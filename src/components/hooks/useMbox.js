@@ -6,8 +6,7 @@ const useMbox = () => {
 
     const deleteMessageFromDirectory = (directory, message_id) => {
         //get  message from folder and add to deleted
-        const fromDirMessages = mbox[directory];
-        const deletedMessage = fromDirMessages.find(message => message.id === message_id);
+        const deletedMessage = mbox[directory].find(message => message.id === message_id);
         let deletedMessages=[];
         if (deletedMessage) {
             deletedMessages = [...mbox.deleted,deletedMessage];

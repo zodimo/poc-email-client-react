@@ -4,19 +4,19 @@ import useMbox from "./hooks/useMbox";
 import useMessageSelected from "./hooks/useMessageSelected";
 const useStyles = makeStyles({
     detailsHeader: {
-        table: {
+        '& table': {
             width: '100%',
-            'th, td': {
+            '& th, td': {
                 padding: '0.3rem',
                 borderBottom: '1px solid #e1e1e1',
                 textAlign: 'left',
             },
-            th: {
+            '& th': {
                 textAlign: 'right'
             }
         }
     },
-    detailsBody: {}
+    detailsBody: {},
 });
 
 const ViewMessage = () => {
@@ -34,7 +34,7 @@ const ViewMessage = () => {
             return <Fragment>
                 <h1>Viewer</h1>
                 <header className={classes.detailsHeader}>
-                    <table id="body-header">
+                    <table>
                         <tbody>
                         <tr>
                             <th>

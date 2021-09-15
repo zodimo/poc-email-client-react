@@ -19,22 +19,23 @@ const useStyles = makeStyles({
     listItem: {
         borderBottom: '1px solid #cccccc',
         display: 'flex',
+
+        '& .details': {
+            borderBottom: '1px solid #cccccc',
+            display: 'flex',
+            flexGrow: 1,
+            flexDirection: 'column',
+            textAlign: 'left',
+            '& .from': {},
+            '& .subject': {
+                fontSize: 'smaller',
+                color: '#999999',
+            }
+        },
         '&.active': {
             background: 'red',
-        }
-    },
-    listItemTime: {},
-    listItemDetails: {
-        borderBottom: '1px solid #cccccc',
-        display: 'flex',
-        flexGrow: 1,
-        flexDirection: 'column',
-        textAlign: 'left'
-    },
-    listItemDetailsFrom: {},
-    listItemDetailsSubject: {
-        fontSize: 'smaller',
-        color: '#999999',
+        },
+        '& .time': {},
     },
     deleteButton: {
         marginLeft: 10,
@@ -80,15 +81,15 @@ const Directory = ({name}) => {
                     return <article key={message.id}
                                     className={`${classes.listItem} ${isMessageSelectedInDirectory(name, message) && "active"}`}
                                     onClick={() => handleSelect(name, message.id)}>
-                        <div className={classes.listItemDetails}>
-                            <div className={classes.listItemDetailsFrom}>
+                        <div className='details'>
+                            <div className='from'>
                                 {message.from}
                             </div>
-                            <div className={classes.listItemDetailsSubject}>
+                            <div className='subject'>
                                 {message.subject}
                             </div>
                         </div>
-                        <div className={classes.listItemTime}>{message.datetime}</div>
+                        <div className='time'>{message.datetime}</div>
                         {name !== "deleted" &&
                         <div className={classes.deleteButton}
                              onClick={(e) => handleDelete(e, name, message.id)}>Delete</div>}

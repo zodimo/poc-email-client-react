@@ -66,6 +66,10 @@ const Directory = ({name}) => {
         setMessageSelected({});
     }, [name, setMessageSelected])
 
+    const isMessageSelectedInDirectory = (name, message) => {
+        return name === messageSelected.directory && message.id === messageSelected.id
+    }
+
     return messages.length > 0 ?
         <div className={classes.messageList}>
             <h1>
@@ -74,7 +78,7 @@ const Directory = ({name}) => {
             <div className={classes.messageListInner}>
                 {messages.map(message => {
                     return <article key={message.id}
-                                    className={`${classes.listItem} ${name === messageSelected.directory && message.id === messageSelected.id && "active"}`}
+                                    className={`${classes.listItem} ${isMessageSelectedInDirectory(name, message) && "active"}`}
                                     onClick={() => handleSelect(name, message.id)}>
                         <div className={classes.listItemDetails}>
                             <div className={classes.listItemDetailsFrom}>

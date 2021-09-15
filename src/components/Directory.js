@@ -1,50 +1,97 @@
 import useMbox from "./hooks/useMbox";
 import useMessageSelected from "./hooks/useMessageSelected";
 import {Fragment, useEffect} from "react";
+import {makeStyles} from "@material-ui/core";
+
+const useStyles = makeStyles({
+    messageList: {
+        background: '#e1e1e1',
+        display: 'flex',
+        flexDirection: 'column',
+        maxHeight: '100vh',
+        height: '100%'
+    },
+    messageListInner: {
+        flexBasis: '100%',
+        flexGrow: 1,
+        overflow: 'auto'
+    },
+    listItem: {
+        borderBottom: '1px solid #cccccc',
+        display: 'flex',
+        '&.active': {
+            background: 'red',
+        }
+    },
+    listItemTime: {},
+    listItemDetails: {
+        borderBottom: '1px solid #cccccc',
+        display: 'flex',
+        flexGrow: 1,
+        flexDirection: 'column',
+        textAlign: 'left'
+    },
+    listItemDetailsFrom: {},
+    listItemDetailsSubject: {
+        fontSize: 'smaller',
+        color: '#999999',
+    },
+    deleteButton: {
+        marginLeft: 10,
+        '&:hover': {
+            background: 'blue',
+        }
+    }
+
+});
 
 const Directory = ({name}) => {
+    const classes = useStyles();
     const {mbox, deleteMessageFromDirectory} = useMbox();
-    const {setMessageSelected} = useMessageSelected();
-    const handleSelect = (message_id) => {
+    const {messageSelected, setMessageSelected} = useMessageSelected();
+    const handleSelect = (directory, message_id) => {
         setMessageSelected({
             id: message_id,
-            directory: name
+            directory: directory
         })
     }
-
-    const handleDelete = (message_id) => {
-        setMessageSelected({});
-        deleteMessageFromDirectory(name, message_id);
+    const handleDelete = (e, directory, message_id) => {
+        e.stopPropagation();
+        deleteMessageFromDirectory(directory, message_id);
     }
 
-    useEffect(() => {
-        //unset the selected message when the directory changes.
-        setMessageSelected({});
-    }, [name])
-
     const messages = mbox[name];
-    return messages.length > 0 ? <Fragment>
-        <table>
-            <tr>
-                <td>Id</td>
-                <td>Date</td>
-                <td>From</td>
-                <td>Subject</td>
-                <td>Action</td>
-            </tr>
-            {messages.map(message => {
-                return <tr key={name + "." + message.id}>
-                    <td>{message.id}</td>
-                    <td>{message.datetime}</td>
-                    <td>{message.from}</td>
-                    <td>{message.subject}</td>
-                    <td>
-                        <button onClick={() => handleSelect(message.id)}>Select</button>
-                        {name !== "deleted" && <button onClick={() => handleDelete(message.id)}>Delete</button>}
-                    </td>
-                </tr>
-            })}
-        </table>
-    </Fragment> : <Fragment>no Messages in directory</Fragment>
+
+    useEffect(() => {
+        setMessageSelected({});
+    }, [name, setMessageSelected])
+
+    return messages.length > 0 ?
+        <div className={classes.messageList}>
+            <h1>
+                {name}
+            </h1>
+            <div className={classes.messageListInner}>
+                {messages.map(message => {
+                    return <article key={message.id}
+                                    className={`${classes.listItem} ${name === messageSelected.directory && message.id === messageSelected.id && "active"}`}
+                                    onClick={() => handleSelect(name, message.id)}>
+                        <div className={classes.listItemDetails}>
+                            <div className={classes.listItemDetailsFrom}>
+                                {message.from}
+                            </div>
+                            <div className={classes.listItemDetailsSubject}>
+                                {message.subject}
+                            </div>
+                        </div>
+                        <div className={classes.listItemTime}>{message.datetime}</div>
+                        {name !== "deleted" &&
+                        <div className={classes.deleteButton}
+                             onClick={(e) => handleDelete(e, name, message.id)}>Delete</div>}
+                    </article>
+
+                })}
+            </div>
+        </div> : <Fragment>No items found</Fragment>
 }
 export default Directory

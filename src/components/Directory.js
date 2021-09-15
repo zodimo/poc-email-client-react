@@ -64,7 +64,7 @@ const Directory = ({name}) => {
 
     useEffect(() => {
         setMessageSelected({});
-    }, [name, setMessageSelected])
+    }, [setMessageSelected, name])
 
     const isMessageSelectedInDirectory = (name, message) => {
         return name === messageSelected.directory && message.id === messageSelected.id
